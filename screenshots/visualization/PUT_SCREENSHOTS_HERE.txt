@@ -1,0 +1,13 @@
+Place visualization screenshots in this folder.
+
+Required screenshots (named exactly as referenced in VISUALIZATION.md):
+1. data_overview.png    — full data page screenshot (all 3 graphs visible)
+2. graph1_histogram.png — close-up of Graph 1 (Time Played Histogram)
+3. graph2_scatter.png   — close-up of Graph 2 (Distance vs Coins Scatter)
+4. graph3_boxplot.png   — close-up of Graph 3 (Collision Speed Boxplot)
+
+After taking screenshots:
+- Replace the placeholder lines in VISUALIZATION.md with actual image tags, e.g.:
+  ![Data Overview](data_overview.png)
+
+Make sure numbers and text in screenshots are clearly readable.

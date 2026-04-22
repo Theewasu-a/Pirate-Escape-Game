@@ -4,10 +4,122 @@ data_recorder.py - CSV session recording, leaderboard, stats report
 import csv, os, json, statistics
 from dataclasses import dataclass, fields, astuple
 
-DATA_FILE   = "game_stats.csv"
-REPORT_FILE = "stats_report.txt"
-LB_FILE     = "leaderboard.json"
-LB_MAX      = 10
+_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE        = os.path.join(_DIR, "game_stats.csv")
+REPORT_FILE      = os.path.join(_DIR, "stats_report.txt")
+LB_FILE          = os.path.join(_DIR, "leaderboard.json")
+COLLISIONS_FILE  = os.path.join(_DIR, "collision_speeds.csv")
+WALLET_FILE      = os.path.join(_DIR, "wallet.json")
+GARAGE_FILE      = os.path.join(_DIR, "garage.json")
+LB_MAX           = 10
+
+
+# ── Wallet (persistent coin bank) ──────────────────────────
+def load_wallet() -> int:
+    if not os.path.isfile(WALLET_FILE):
+        return 0
+    try:
+        with open(WALLET_FILE) as f:
+            return int(json.load(f).get("coins", 0))
+    except Exception:
+        return 0
+
+
+def save_wallet(coins: int):
+    with open(WALLET_FILE, "w") as f:
+        json.dump({"coins": max(0, int(coins))}, f)
+
+
+def add_coins(amount: int):
+    save_wallet(load_wallet() + amount)
+
+
+def spend_coins(amount: int) -> bool:
+    """Deduct coins if affordable. Returns True on success."""
+    bal = load_wallet()
+    if bal < amount:
+        return False
+    save_wallet(bal - amount)
+    return True
+
+
+# ── Garage (owned boats + selected boat) ──────────────────
+_DEFAULT_GARAGE = {
+    "owned": ["starter"],
+    "selected": "starter",
+    "colors": {},   # boat_id -> {"hull": [r,g,b], "sail": [r,g,b]}
+}
+
+
+def load_garage() -> dict:
+    if not os.path.isfile(GARAGE_FILE):
+        return dict(_DEFAULT_GARAGE)
+    try:
+        with open(GARAGE_FILE) as f:
+            data = json.load(f)
+        return {
+            "owned":    data.get("owned", ["starter"]),
+            "selected": data.get("selected", "starter"),
+            "colors":   data.get("colors", {}),
+        }
+    except Exception:
+        return dict(_DEFAULT_GARAGE)
+
+
+def save_garage(garage: dict):
+    with open(GARAGE_FILE, "w") as f:
+        json.dump(garage, f, indent=2)
+
+
+def buy_boat(boat_id: str, price: int) -> bool:
+    garage = load_garage()
+    if boat_id in garage["owned"]:
+        return True   # already owned
+    if not spend_coins(price):
+        return False
+    garage["owned"].append(boat_id)
+    save_garage(garage)
+    return True
+
+
+def select_boat(boat_id: str):
+    garage = load_garage()
+    if boat_id in garage["owned"]:
+        garage["selected"] = boat_id
+        save_garage(garage)
+
+
+def save_boat_colors(boat_id: str, hull: tuple, sail: tuple):
+    garage = load_garage()
+    garage["colors"][boat_id] = {
+        "hull": list(hull),
+        "sail": list(sail),
+    }
+    save_garage(garage)
+
+
+def load_boat_colors(boat_id: str) -> dict:
+    garage = load_garage()
+    return garage["colors"].get(boat_id, {})
+
+
+def save_collision_speed(speed: float):
+    """Record a single collision's boat speed for analysis (Graph 3)."""
+    exists = os.path.isfile(COLLISIONS_FILE)
+    with open(COLLISIONS_FILE, "a", newline="") as f:
+        w = csv.writer(f)
+        if not exists: w.writerow(["speed"])
+        w.writerow([round(float(speed), 3)])
+
+
+def load_collision_speeds():
+    if not os.path.isfile(COLLISIONS_FILE): return []
+    out = []
+    with open(COLLISIONS_FILE, newline="") as f:
+        for row in csv.DictReader(f):
+            try: out.append(float(row["speed"]))
+            except (KeyError, ValueError): continue
+    return out
 
 
 @dataclass
