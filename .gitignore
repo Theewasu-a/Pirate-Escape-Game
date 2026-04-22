@@ -27,14 +27,6 @@ ENV/
 *.tmp
 *.swp
 
-# Runtime data files (generated when playing the game)
-wallet.json
-garage.json
-leaderboard.json
-game_stats.csv
-collision_speeds.csv
-stats_report.txt
-
 # macOS
 .DS_Store
 

@@ -1,0 +1,16 @@
+{
+  "owned": [
+    "starter",
+    "sloop"
+  ],
+  "selected": "sloop",
+  "colors": {
+    "sloop": {
+      "hull": [
+        40,
+        90,
+        160
+      ]
+    }
+  }
+}
