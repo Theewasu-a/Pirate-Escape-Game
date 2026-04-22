@@ -55,7 +55,7 @@ but short distance) can indicate effective use of the coin magnet powerup.
 ## Graph 3 — Boat Speed at Collision (Boxplot)
 
 > **Screenshot:** `graph3_boxplot.png`
-> *![Graph 3 Boxplot](screenshots/visualization/col_spd.png)*
+> *![Graph 3 Boxplot](col_spd.png)*
 
 **What it shows:** A boxplot of the boat's speed (units/second) at the exact moment each
 collision with a rock occurred. Shows Q1, median, Q3, whiskers, and outliers.

@@ -40,9 +40,9 @@ Beyond the core gameplay, the game features a boat shop with 4 unique vessels (e
 ![](screenshots/gameplay/11.png)
 ![](screenshots/gameplay/12.png)
 
-**Proposal:** *(Add link to proposal PDF here)*
+**Proposal:** https://docs.google.com/document/d/1u-aAra5HxfGTgGCPR-e61_T4upWGBjCKWuXInW_ujAw/edit?tab=t.0#heading=h.b5lykl8ymu1n
 
-**YouTube Presentation:** *(Add YouTube link here)*
+**YouTube Presentation:** *(NOT DONE IT YET.)*
 
 ---
 
@@ -78,7 +78,7 @@ The UML class diagram is attached as a PDF in this repository.
 - `SoundBank` — procedural SFX container; gracefully no-ops if numpy unavailable
 - `SessionData`, `LeaderboardEntry` — data classes for persistence (via `data_recorder`)
 
-*(Attach UML PDF link here)*
+*(UML PDF)(NOT DONE YET.)*
 
 ---
 
@@ -135,7 +135,7 @@ Leaderboard and wallet/garage data are stored in JSON files (`leaderboard.json`,
 
 ## 6. Changed Proposed Features
 
-*(Fill in if any features differ from the original proposal)*
+- The original three-level structure was removed so that the game can run continuously, ensuring longer gameplay and preventing it from ending too quickly.
 
 ---
 
