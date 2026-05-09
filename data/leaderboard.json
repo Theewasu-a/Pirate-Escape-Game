@@ -7,6 +7,41 @@
     "time": 378
   },
   {
+    "score": 101140,
+    "coins": 1340,
+    "level": 1,
+    "distance": 3.712,
+    "time": 447
+  },
+  {
+    "score": 76211,
+    "coins": 701,
+    "level": 1,
+    "distance": 2.724,
+    "time": 367
+  },
+  {
+    "score": 69166,
+    "coins": 627,
+    "level": 1,
+    "distance": 1.732,
+    "time": 215
+  },
+  {
+    "score": 68227,
+    "coins": 839,
+    "level": 1,
+    "distance": 1.281,
+    "time": 219
+  },
+  {
+    "score": 64998,
+    "coins": 840,
+    "level": 1,
+    "distance": 1.185,
+    "time": 214
+  },
+  {
     "score": 64699,
     "coins": 722,
     "level": 1,
@@ -14,59 +49,24 @@
     "time": 231
   },
   {
-    "score": 34593,
-    "coins": 549,
+    "score": 53203,
+    "coins": 637,
     "level": 1,
-    "distance": 1.142,
-    "time": 230
+    "distance": 1.58,
+    "time": 186
   },
   {
-    "score": 30786,
-    "coins": 528,
+    "score": 50611,
+    "coins": 483,
     "level": 1,
-    "distance": 0.973,
-    "time": 203
+    "distance": 2.615,
+    "time": 371
   },
   {
-    "score": 13984,
-    "coins": 256,
+    "score": 50430,
+    "coins": 617,
     "level": 1,
-    "distance": 0.364,
-    "time": 90
-  },
-  {
-    "score": 12527,
-    "coins": 199,
-    "level": 1,
-    "distance": 0.353,
-    "time": 90
-  },
-  {
-    "score": 10103,
-    "coins": 228,
-    "level": 1,
-    "distance": 0.539,
-    "time": 125
-  },
-  {
-    "score": 9642,
-    "coins": 258,
-    "level": 1,
-    "distance": 0.495,
-    "time": 96
-  },
-  {
-    "score": 8241,
-    "coins": 166,
-    "level": 1,
-    "distance": 0.276,
-    "time": 70
-  },
-  {
-    "score": 7229,
-    "coins": 103,
-    "level": 1,
-    "distance": 0.187,
-    "time": 58
+    "distance": 1.212,
+    "time": 147
   }
 ]

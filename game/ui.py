@@ -328,10 +328,15 @@ def _draw_axes(surface, rect, x_label, y_label):
     pygame.draw.line(surface, C_OCEAN_FOAM,
                      (rect.left, rect.bottom), (rect.right, rect.bottom), 1)
     lf = _font(9)
-    xl = lf.render(x_label, True, C_OCEAN_FOAM)
-    yl = lf.render(y_label, True, C_OCEAN_FOAM)
-    surface.blit(xl, (rect.right - xl.get_width(), rect.bottom + 3))
-    surface.blit(yl, (rect.left - yl.get_width() - 3, rect.top - 12))
+    if x_label:
+        xl = lf.render(x_label, True, C_OCEAN_FOAM)
+        surface.blit(xl, (rect.right - xl.get_width(), rect.bottom + 3))
+    if y_label:
+        yl_surf = lf.render(y_label, True, C_OCEAN_FOAM)
+        yl_rot  = pygame.transform.rotate(yl_surf, 90)
+        lx = rect.left - yl_rot.get_width() - 2
+        ly = rect.centery - yl_rot.get_height() // 2
+        surface.blit(yl_rot, (lx, ly))
 
 
 def _draw_histogram(surface, rect, values, title,
@@ -347,7 +352,7 @@ def _draw_histogram(surface, rect, values, title,
         surface.blit(et, (rect.centerx - et.get_width()//2, rect.centery))
         return
 
-    pad_l, pad_r, pad_t, pad_b = 28, 10, 28, 22
+    pad_l, pad_r, pad_t, pad_b = 40, 10, 28, 22
     plot = pygame.Rect(rect.x + pad_l, rect.y + pad_t,
                        rect.width - pad_l - pad_r,
                        rect.height - pad_t - pad_b)
@@ -934,37 +939,129 @@ def draw_boat_shop(surface, catalog, owned, selected, wallet,
 
 
 def draw_leaderboard(surface, entries, buttons, mouse_pos):
-    ov = pygame.Surface((SCREEN_W, SCREEN_H), pygame.SRCALPHA)
-    ov.fill((*C_OCEAN_DEEP, 230))
-    surface.blit(ov, (0,0))
+    surface.fill(C_OCEAN_DEEP)
 
-    t = _title_font(32).render("LEADERBOARD", True, C_GOLD)
-    surface.blit(t, (SCREEN_W//2 - t.get_width()//2, 30))
+    # ── Background texture ────────────────────────────────────
+    bg = pygame.Surface((SCREEN_W, SCREEN_H), pygame.SRCALPHA)
+    bg.fill((6, 14, 28, 245))
+    surface.blit(bg, (0, 0))
 
-    headers = ["#","SCORE","COINS","KM","TIME"]
-    col_xs  = [36, 110,    210,    300, 380]
-    hf = _font(10, bold=True)
-    for hdr, x in zip(headers, col_xs):
-        surface.blit(hf.render(hdr, True, C_OCEAN_FOAM), (x, 90))
-    pygame.draw.line(surface, C_OCEAN_FOAM, (24, 108), (SCREEN_W-24, 108), 1)
+    # ── Title ────────────────────────────────────────────────
+    tf = _title_font(30)
+    t  = tf.render("LEADERBOARD", True, C_GOLD)
+    surface.blit(t, (SCREEN_W//2 - t.get_width()//2, 10))
+    pygame.draw.line(surface, C_GOLD_DARK,
+                     (SCREEN_W//4, 46), (SCREEN_W*3//4, 46), 1)
 
-    medal_colors = [C_GOLD, (192,192,192), (205,127,50)]
-    rf = _font(13)
-    for i, entry in enumerate(entries[:8]):
-        y     = 116 + i*34
-        color = medal_colors[i] if i < 3 else C_WHITE
-        ranks = ["1st","2nd","3rd"]
-        row   = [ranks[i] if i < 3 else str(i+1),
-                 str(entry.score), str(entry.coins),
-                 f"{entry.distance:.2f}", f"{entry.time}s"]
-        for val, x in zip(row, col_xs):
-            surface.blit(rf.render(val, True, color), (x, y))
+    n_shown = len(entries[:10])
+    ct = _font(9).render(f"Top {n_shown} of all time", True, C_GRAY)
+    surface.blit(ct, (SCREEN_W//2 - ct.get_width()//2, 50))
+
+    # ── Column layout ────────────────────────────────────────
+    # #(rank) | SCORE | COINS | DIST | TIME
+    # x positions (left edge of each column)
+    CX = [14, 72, 196, 300, 376]   # #, SCORE, COINS, KM, TIME
+    CW = [58, 124, 104, 76, 94]    # widths
+
+    HDR_Y  = 70
+    ROW_Y0 = 92
+    ROW_H  = 46
+
+    # Column header row
+    hdr_bg = pygame.Surface((SCREEN_W - 16, 22), pygame.SRCALPHA)
+    hdr_bg.fill((20, 50, 100, 180))
+    surface.blit(hdr_bg, (8, HDR_Y - 2))
+    hf = _font(9, bold=True)
+    hdrs = ["#", "SCORE", "COINS", "KM", "TIME"]
+    aligns = ["center", "right", "right", "right", "right"]
+    for hdr, x, w, align in zip(hdrs, CX, CW, aligns):
+        ht = hf.render(hdr, True, C_OCEAN_FOAM)
+        if align == "center":
+            hx = x + w//2 - ht.get_width()//2
+        else:
+            hx = x + w - ht.get_width()
+        surface.blit(ht, (hx, HDR_Y))
+    pygame.draw.line(surface, C_OCEAN_FOAM,
+                     (8, HDR_Y + 20), (SCREEN_W - 8, HDR_Y + 20), 1)
+
+    # ── Medal / rank colors ───────────────────────────────────
+    MEDAL = [
+        C_GOLD,           # 1st
+        (192, 192, 210),  # 2nd silver
+        (205, 127, 50),   # 3rd bronze
+    ]
+    ROW_BG = [
+        (50, 38,  5, 130),   # 1st — warm gold tint
+        (32, 32, 48, 120),   # 2nd — silver tint
+        (44, 26, 10, 120),   # 3rd — bronze tint
+    ]
+
+    rf  = _font(12)
+    rnf = _font(16, bold=True)
 
     if not entries:
-        et = _font(13).render("No scores yet - set sail!", True, C_GRAY)
-        surface.blit(et, (SCREEN_W//2 - et.get_width()//2, 200))
+        et = _font(13).render("No scores yet — set sail!", True, C_GRAY)
+        surface.blit(et, (SCREEN_W//2 - et.get_width()//2, 280))
+    else:
+        for i, entry in enumerate(entries[:10]):
+            ry  = ROW_Y0 + i * ROW_H
+            col = MEDAL[i] if i < 3 else C_WHITE
+
+            # Row background
+            rb_col = ROW_BG[i] if i < 3 else (14, 28, 52, 80 if i % 2 == 0 else 50)
+            rb = pygame.Surface((SCREEN_W - 16, ROW_H - 2), pygame.SRCALPHA)
+            rb.fill(rb_col)
+            surface.blit(rb, (8, ry))
+
+            # Left accent bar (colored for top 3)
+            if i < 3:
+                pygame.draw.rect(surface, col, (8, ry, 3, ROW_H - 2), border_radius=1)
+
+            # Row separator
+            if i > 0:
+                pygame.draw.line(surface, (25, 55, 95),
+                                 (8, ry), (SCREEN_W - 8, ry), 1)
+
+            # ── Rank number ──────────────────────────────────
+            rank_str = str(i + 1)
+            rt = rnf.render(rank_str, True, col)
+            rx = CX[0] + CW[0]//2 - rt.get_width()//2
+            surface.blit(rt, (rx, ry + (ROW_H - 2 - rt.get_height())//2))
+
+            # Small medal dot for top 3
+            if i < 3:
+                dot_x = CX[0] + CW[0] - 6
+                dot_y = ry + 6
+                pygame.draw.circle(surface, col, (dot_x, dot_y), 4)
+
+            # ── Score ────────────────────────────────────────
+            sf = _font(14, bold=(i < 3))
+            st = sf.render(f"{entry.score:,}", True, col)
+            surface.blit(st, (CX[1] + CW[1] - st.get_width(),
+                               ry + (ROW_H - 2 - st.get_height())//2))
+
+            # ── Coins ────────────────────────────────────────
+            ct2 = rf.render(str(entry.coins), True,
+                            C_GOLD if i < 3 else (210, 180, 60))
+            surface.blit(ct2, (CX[2] + CW[2] - ct2.get_width(),
+                                ry + (ROW_H - 2 - ct2.get_height())//2))
+
+            # ── Distance ─────────────────────────────────────
+            dt = rf.render(f"{entry.distance:.2f}", True,
+                           (80, 200, 255) if i < 3 else C_OCEAN_FOAM)
+            surface.blit(dt, (CX[3] + CW[3] - dt.get_width(),
+                               ry + (ROW_H - 2 - dt.get_height())//2))
+
+            # ── Time ─────────────────────────────────────────
+            mins, secs = divmod(entry.time, 60)
+            time_str = f"{mins}m{secs:02d}s" if mins else f"{secs}s"
+            tt = rf.render(time_str, True,
+                           C_GREEN if i < 3 else C_GRAY)
+            surface.blit(tt, (CX[4] + CW[4] - tt.get_width(),
+                               ry + (ROW_H - 2 - tt.get_height())//2))
 
     pygame.draw.line(surface, C_OCEAN_FOAM,
-                     (SCREEN_W//4, SCREEN_H-110), (SCREEN_W*3//4, SCREEN_H-110), 1)
+                     (SCREEN_W//4, SCREEN_H - 110),
+                     (SCREEN_W*3//4, SCREEN_H - 110), 1)
     for key, rect in buttons.items():
         draw_button(surface, rect, key, hovered=rect.collidepoint(mouse_pos))

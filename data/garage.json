@@ -1,15 +1,35 @@
 {
   "owned": [
     "starter",
-    "sloop"
+    "sloop",
+    "galleon"
   ],
-  "selected": "sloop",
+  "selected": "galleon",
   "colors": {
     "sloop": {
+      "hull": [
+        160,
+        40,
+        40
+      ]
+    },
+    "galleon": {
+      "sail": [
+        180,
+        220,
+        255
+      ]
+    },
+    "manowar": {
       "hull": [
         40,
         90,
         160
+      ],
+      "sail": [
+        180,
+        220,
+        255
       ]
     }
   }

@@ -1,0 +1,24 @@
+digraph "packages_PirateEscape" {
+rankdir=BT
+charset="utf-8"
+"data" [color="black", label=<data>, shape="box", style="solid"];
+"data.data_recorder" [color="black", label=<data.data_recorder>, shape="box", style="solid"];
+"game" [color="black", label=<game>, shape="box", style="solid"];
+"game.constants" [color="black", label=<game.constants>, shape="box", style="solid"];
+"game.game_manager" [color="black", label=<game.game_manager>, shape="box", style="solid"];
+"game.objects" [color="black", label=<game.objects>, shape="box", style="solid"];
+"game.particles" [color="black", label=<game.particles>, shape="box", style="solid"];
+"game.player_boat" [color="black", label=<game.player_boat>, shape="box", style="solid"];
+"game.sounds" [color="black", label=<game.sounds>, shape="box", style="solid"];
+"game.ui" [color="black", label=<game.ui>, shape="box", style="solid"];
+"game.game_manager" -> "data.data_recorder" [arrowhead="open", arrowtail="none"];
+"game.game_manager" -> "game.constants" [arrowhead="open", arrowtail="none"];
+"game.game_manager" -> "game.objects" [arrowhead="open", arrowtail="none"];
+"game.game_manager" -> "game.particles" [arrowhead="open", arrowtail="none"];
+"game.game_manager" -> "game.player_boat" [arrowhead="open", arrowtail="none"];
+"game.game_manager" -> "game.sounds" [arrowhead="open", arrowtail="none"];
+"game.objects" -> "game.constants" [arrowhead="open", arrowtail="none"];
+"game.player_boat" -> "game.constants" [arrowhead="open", arrowtail="none"];
+"game.ui" -> "game.constants" [arrowhead="open", arrowtail="none"];
+"game.ui" -> "game.player_boat" [arrowhead="open", arrowtail="none"];
+}
