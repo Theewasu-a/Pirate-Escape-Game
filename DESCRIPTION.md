@@ -3,7 +3,7 @@
 ## 1. Project Overview
 
 - **Project Name:** Pirate Escape
-- **Project by:** Mr.Theewasu
+- **Project by:** Mr.Theewasu Aekthong 6810545701
 
 **Brief Description:**
 Pirate Escape is a top-down endless runner game built with Python and pygame. The player steers a pirate boat through 5 ocean lanes, dodging rock obstacles, collecting gold coins, and evading police patrol boats. The game is inspired by the endless runner genre popularized by **Subway Surfers** — bringing the same addictive "dodge and collect" loop to a naval setting with a pirate theme. The longer the player survives, the faster the boat moves, making each run progressively more challenging.
@@ -42,7 +42,7 @@ Beyond the core gameplay, the game features a boat shop with 4 unique vessels (e
 
 **Proposal:** https://docs.google.com/document/d/1u-aAra5HxfGTgGCPR-e61_T4upWGBjCKWuXInW_ujAw/edit?tab=t.0#heading=h.b5lykl8ymu1n
 
-**YouTube Presentation:** *(NOT DONE IT YET.)*
+**YouTube Presentation:** https://youtu.be/ufVDAW-8QOM
 
 ---
 
@@ -78,7 +78,7 @@ The UML class diagram is attached as a PDF in this repository.
 - `SoundBank` — procedural SFX container; gracefully no-ops if numpy unavailable
 - `SessionData`, `LeaderboardEntry` — data classes for persistence (via `data_recorder`)
 
-*(UML PDF)(NOT DONE YET.)*
+![](UML_ClassDiagram.pdf)
 
 ---
 
